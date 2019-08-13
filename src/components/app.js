@@ -12,17 +12,29 @@ export default class App extends Component {
     recipes: recipes,
     url:
       "https://www.food2fork.com/api/search?key=d16eab216a51abdafb5c4c8f27d41daf",
-    details_id: 35379,
-    pageIndex: 1
+    base_url:
+      "https://www.food2fork.com/api/search?key=d16eab216a51abdafb5c4c8f27d41daf",
+    details_id: 35389,
+    pageIndex: 1,
+    search: "",
+    query: "&q=",
+    error: ""
   };
 
   async getRecipes() {
     try {
       const data = await fetch(this.state.url);
       const jsonData = await data.json();
-      this.setState({
-        recipes: jsonData.recipes
-      });
+      console.log(jsonData);
+      if (jsonData.recipes.lenght === 0) {
+        this.setState(() => {
+          return { error: "Sorry no results" };
+        });
+      } else {
+        this.setState(() => {
+          return { recipes: jsonData.recipes };
+        });
+      }
     } catch (error) {
       console.log(error);
     }
@@ -40,6 +52,10 @@ export default class App extends Component {
           <RecipeList
             recipes={this.state.recipes}
             handleDetails={this.handleDetails}
+            value={this.state.search}
+            handleChange={this.handleChange}
+            handleSubmit={this.handleSubmit}
+            error={this.state.error}
           />
         );
       case 0:
@@ -63,6 +79,30 @@ export default class App extends Component {
       pageIndex: index,
       details_id: id
     });
+  };
+  handleChange = e => {
+    this.setState(
+      {
+        search: e.target.value
+      },
+      () => {
+        console.log(this.state.search);
+      }
+    );
+  };
+
+  handleSubmit = e => {
+    e.preventDefault();
+    const { base_url, query, search } = this.state;
+
+    this.setState(
+      () => {
+        return { url: `${base_url}${query}${search}`, search: "" };
+      },
+      () => {
+        this.getRecipes();
+      }
+    );
   };
 
   render() {
