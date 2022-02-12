@@ -34,7 +34,7 @@
   "dependencies": {
     "@babel/polyfill": "^7.4.4",
     "@babel/runtime": "^7.5.5",
-    "ajv": "^5.5.2",
+    "ajv": "^6.12.3",
     "async": "^3.1.0",
     "autoprefixer": "^9.1.0",
     "babel": "^6.23.0",
